@@ -6,18 +6,30 @@ using System.Threading.Tasks;
 
 namespace HttpWebServer
 {
-    public class AppBase
+    public class AppBase:IAppBase
     {
         protected static bool _isStopped = true;
 
-        public static bool Start()
+        public bool IsStopped
+        {
+            get
+            {
+                return _isStopped;
+            }
+
+            private set { }
+        }
+
+        public AppBase() { }
+
+        public   bool Start()
         {
             _isStopped = false;
 
             return true;
         }
 
-        public static bool Stop()
+        public   bool Stop()
         {
             _isStopped = true;
 
@@ -28,5 +40,11 @@ namespace HttpWebServer
         {
             return string.Empty;
         }
+
+
+        //public string ProcessRequest(string[] parameters)
+        //{
+        //    throw new NotImplementedException();
+        //}
     }
 }

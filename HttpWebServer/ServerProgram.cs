@@ -61,10 +61,14 @@ namespace HttpWebServer
             var receivedText = context.Request.Headers["thread"] + " Received";
             Console.WriteLine("Server: " + receivedText);
             context.Response.Headers["thread"] = receivedText;
+            AppFibonacci appfin = new AppFibonacci();
+            appfin.Start();
 
-            AppFibonacci.Start();
-            AppTextFileReader.Start();
-            AppIndex.Start();
+            AppTextFileReader apptex = new AppTextFileReader();
+            apptex.Start();
+
+            AppIndex appindex = new AppIndex();
+            appindex.Start();
 
             string url = context.Request.Url.ToString();
 
