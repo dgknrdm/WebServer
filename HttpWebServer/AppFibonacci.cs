@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+
 namespace HttpWebServer
 {
     public class AppFibonacci : AppBase
@@ -15,8 +16,9 @@ namespace HttpWebServer
         {
             if (_isStopped)
             {
-                // TODO: dogukan - return 404
-                throw new NotImplementedException();
+                
+                //// TODO: dogukan - return 404
+                //throw new NotImplementedException();
             }
 
             Console.Write(_firstFibonacci + "\n" + _secondFibonacci + "\n");

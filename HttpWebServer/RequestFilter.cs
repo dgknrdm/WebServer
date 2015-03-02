@@ -8,22 +8,22 @@ namespace HttpWebServer
 {
     class RequestFilter
     {
-        public static AppBase DoMapping(string url)
+        public static IAppBase DoMapping(string url)
         {
             if (url.ToLowerInvariant() == "nextfibonacci")
             {
-                return new AppFibonacci();
+                return AppLifecycleManager.Resolve<IAppBase>("AppFibonacci");
             }
             else if (url.ToLowerInvariant() == "testfile.txt") 
             {
-                return new AppTextFileReader();
+                return AppLifecycleManager.Resolve<IAppBase>("AppTextFileReader");
             }
             else if (url == "")
             {
-                return new AppIndex();
+                return AppLifecycleManager.Resolve<IAppBase>("AppIndex");
             }
 
-            return new AppBase();
+            return default(IAppBase);
         }
     }
 }

@@ -8,7 +8,7 @@ namespace HttpWebServer
 {
     public class AppBase:IAppBase
     {
-        protected static bool _isStopped = true;
+        protected bool _isStopped = true;
 
         public bool IsStopped
         {
@@ -22,14 +22,14 @@ namespace HttpWebServer
 
         public AppBase() { }
 
-        public   bool Start()
+        public bool Start()
         {
             _isStopped = false;
 
             return true;
         }
 
-        public   bool Stop()
+        public bool Stop()
         {
             _isStopped = true;
 

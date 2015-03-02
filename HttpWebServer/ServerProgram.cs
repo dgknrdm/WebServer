@@ -36,6 +36,19 @@ namespace HttpWebServer
 
             listener.Start();
 
+            AppLifecycleManager.RegisterApp<IAppBase, AppFibonacci>("AppFibonacci");
+            AppLifecycleManager.RegisterApp<IAppBase, AppTextFileReader>("AppTextFileReader");
+            AppLifecycleManager.RegisterApp<IAppBase, AppIndex>("AppIndex");
+
+            IAppBase appfin = AppLifecycleManager.Resolve<IAppBase>("AppFibonacci");
+            appfin.Start();
+
+            IAppBase apptex = AppLifecycleManager.Resolve<IAppBase>("AppTextFileReader");
+            apptex.Start();
+
+            IAppBase appindex = AppLifecycleManager.Resolve<IAppBase>("AppIndex");
+            appindex.Start();
+
             while (true)
             {
                 ProcessRequest();
@@ -61,20 +74,13 @@ namespace HttpWebServer
             var receivedText = context.Request.Headers["thread"] + " Received";
             Console.WriteLine("Server: " + receivedText);
             context.Response.Headers["thread"] = receivedText;
-            AppFibonacci appfin = new AppFibonacci();
-            appfin.Start();
 
-            AppTextFileReader apptex = new AppTextFileReader();
-            apptex.Start();
-
-            AppIndex appindex = new AppIndex();
-            appindex.Start();
 
             string url = context.Request.Url.ToString();
 
             string appUrl = url.Replace("http://localhost:8097/", string.Empty);
 
-            AppBase theApp = RequestFilter.DoMapping(appUrl);
+            IAppBase theApp = RequestFilter.DoMapping(appUrl);
 
             if (theApp == default(AppBase))
             {
