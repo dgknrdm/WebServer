@@ -14,16 +14,14 @@ namespace HttpWebServer
             {
                 return AppLifecycleManager.Resolve<IAppBase>("AppFibonacci");
             }
-            else if (url.ToLowerInvariant() == "testfile.txt") 
-            {
-                return AppLifecycleManager.Resolve<IAppBase>("AppTextFileReader");
-            }
             else if (url == "")
             {
                 return AppLifecycleManager.Resolve<IAppBase>("AppIndex");
             }
-
-            return default(IAppBase);
+            else
+            {
+                return AppLifecycleManager.Resolve<IAppBase>("AppTextFileReader");
+            }
         }
     }
 }

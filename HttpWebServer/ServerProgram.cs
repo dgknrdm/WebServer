@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
+using System.Web.Configuration;
 
 namespace HttpWebServer
 {
@@ -15,8 +16,7 @@ namespace HttpWebServer
     {
         
         static HttpListener listener;        
-        static int sayi1 = 0;
-        static int sayi2 = 1;
+        static string baseUrl = WebConfigurationManager.AppSettings["serverBaseUrlKey"];
 
         public ServerProgram()
         {
@@ -25,13 +25,13 @@ namespace HttpWebServer
 
         static void MainServer()
         {
-            String sMyWebServerRoot = "C:\\WebServerRoot\\";
+            
+            //Server Root Folder
+            //String sMyWebServerRoot = "C:\\WebServerRoot\\";
 
             Console.WriteLine("Server");
             listener = new HttpListener();
-            listener.Prefixes.Add("http://localhost:8097/");
-            listener.Prefixes.Add("http://localhost:8097/testFile.txt/");
-            listener.Prefixes.Add("http://localhost:8097/NextFibonacci/");
+            listener.Prefixes.Add(baseUrl);          
             listener.AuthenticationSchemes = AuthenticationSchemes.Anonymous;
 
             listener.Start();
@@ -52,7 +52,6 @@ namespace HttpWebServer
             while (true)
             {
                 ProcessRequest();
-                
             }
         }
 
@@ -67,18 +66,14 @@ namespace HttpWebServer
         static void ListenerCallback(IAsyncResult result)
         {
             var context = listener.EndGetContext(result);
-            string[] emptyParam = new string[0];
+            string[] urlParamStr = new string[0];
             
-            context.Response.StatusCode = 200;
-            context.Response.StatusDescription = "OK";
-            var receivedText = context.Request.Headers["thread"] + " Received";
-            Console.WriteLine("Server: " + receivedText);
-            context.Response.Headers["thread"] = receivedText;
-
+            //context.Response.StatusCode = 200;
+            //context.Response.StatusDescription = "OK";
 
             string url = context.Request.Url.ToString();
 
-            string appUrl = url.Replace("http://localhost:8097/", string.Empty);
+            string appUrl = url.Replace(baseUrl, string.Empty);
 
             IAppBase theApp = RequestFilter.DoMapping(appUrl);
 
@@ -87,7 +82,11 @@ namespace HttpWebServer
                 return;
             }
 
-            string appResponseStr = theApp.HandleRequest(emptyParam);
+            urlParamStr = new string[1];
+
+            urlParamStr[0] = appUrl;
+
+            string appResponseStr = theApp.HandleRequest(urlParamStr);
 
             var buffer = System.Text.Encoding.UTF8.GetBytes(appResponseStr);
 

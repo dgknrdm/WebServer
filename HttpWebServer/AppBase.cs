@@ -40,11 +40,5 @@ namespace HttpWebServer
         {
             return string.Empty;
         }
-
-
-        //public string ProcessRequest(string[] parameters)
-        //{
-        //    throw new NotImplementedException();
-        //}
     }
 }
