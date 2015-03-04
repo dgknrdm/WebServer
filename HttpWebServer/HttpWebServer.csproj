@@ -79,6 +79,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Error404.html" />
     <Content Include="index.html" />
   </ItemGroup>
   <ItemGroup>

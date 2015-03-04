@@ -8,6 +8,7 @@ using System.Web;
 using System.Web.Configuration;
 using System.Web.Http;
 using System.Web.Mvc;
+using System.Web.UI;
 
 
 namespace HttpWebServer
@@ -20,11 +21,12 @@ namespace HttpWebServer
         public override string HandleRequest(string[] parameters)
         {
             if (_isStopped)
-            {
-                //// TODO: dogukan - return 404 
+            {               
+                ServerProgram.HttpRequestContext.Response.StatusCode = 404;
                 HttpException error = new HttpException(404, "It looks like we don't know that address, Are you sure you're in the right place?");
                 string errorurl = error.ToString().Replace("System.Web.HttpException (0x80004005): ", string.Empty);
                 return errorurl;
+
             }
 
             Console.Write(_firstFibonacci + "\n" + _secondFibonacci + "\n");

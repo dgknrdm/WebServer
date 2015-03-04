@@ -12,11 +12,12 @@ using System.Web.Configuration;
 
 namespace HttpWebServer
 {
-   class ServerProgram
+    public class ServerProgram
     {
         
         static HttpListener listener;        
         static string baseUrl = WebConfigurationManager.AppSettings["serverBaseUrlKey"];
+        public static HttpListenerContext HttpRequestContext;
 
         public ServerProgram()
         {
@@ -36,12 +37,13 @@ namespace HttpWebServer
 
             listener.Start();
 
+
             AppLifecycleManager.RegisterApp<IAppBase, AppFibonacci>("AppFibonacci");
             AppLifecycleManager.RegisterApp<IAppBase, AppTextFileReader>("AppTextFileReader");
             AppLifecycleManager.RegisterApp<IAppBase, AppIndex>("AppIndex");
 
             IAppBase appfin = AppLifecycleManager.Resolve<IAppBase>("AppFibonacci");
-            appfin.Start();
+            //appfin.Start();
 
             IAppBase apptex = AppLifecycleManager.Resolve<IAppBase>("AppTextFileReader");
             apptex.Start();
@@ -65,13 +67,13 @@ namespace HttpWebServer
 
         static void ListenerCallback(IAsyncResult result)
         {
-            var context = listener.EndGetContext(result);
+            HttpRequestContext = listener.EndGetContext(result);
             string[] urlParamStr = new string[0];
-            
-            //context.Response.StatusCode = 200;
-            //context.Response.StatusDescription = "OK";
 
-            string url = context.Request.Url.ToString();
+            //HttpRequestContext.Response.StatusCode = 200;
+            //HttpRequestContext.Response.StatusDescription = "OK";
+
+            string url = HttpRequestContext.Request.Url.ToString();
 
             string appUrl = url.Replace(baseUrl, string.Empty);
 
@@ -90,15 +92,15 @@ namespace HttpWebServer
 
             var buffer = System.Text.Encoding.UTF8.GetBytes(appResponseStr);
 
-            context.Response.ContentLength64 = buffer.Length;
+            HttpRequestContext.Response.ContentLength64 = buffer.Length;
 
-            var output = context.Response.OutputStream;
+            var output = HttpRequestContext.Response.OutputStream;
 
             output.Write(buffer, 0, buffer.Length);
 
             output.Close();
 
-            context.Response.Close();
+            HttpRequestContext.Response.Close();
 
             return;
         }
