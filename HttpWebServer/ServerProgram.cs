@@ -43,7 +43,7 @@ namespace HttpWebServer
             AppLifecycleManager.RegisterApp<IAppBase, AppIndex>("AppIndex");
 
             IAppBase appfin = AppLifecycleManager.Resolve<IAppBase>("AppFibonacci");
-            //appfin.Start();
+            appfin.Start();
 
             IAppBase apptex = AppLifecycleManager.Resolve<IAppBase>("AppTextFileReader");
             apptex.Start();

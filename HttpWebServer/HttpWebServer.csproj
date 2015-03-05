@@ -80,6 +80,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Error404.html" />
+    <Content Include="Images\PageNotFound.jpg" />
     <Content Include="index.html" />
   </ItemGroup>
   <ItemGroup>
