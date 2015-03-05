@@ -49,7 +49,7 @@ namespace HttpWebServer
             apptex.Start();
 
             IAppBase appindex = AppLifecycleManager.Resolve<IAppBase>("AppIndex");
-            appindex.Start();
+            //appindex.Start();
 
             while (true)
             {
