@@ -63,6 +63,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AppNotFound.cs" />
     <Compile Include="AppFibonacci.cs" />
     <Compile Include="AppBase.cs" />
     <Compile Include="AppIndex.cs" />

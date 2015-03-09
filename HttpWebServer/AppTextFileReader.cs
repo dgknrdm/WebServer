@@ -33,7 +33,10 @@ namespace HttpWebServer
             {
                 //TODO - Implement Error 404
                 //throw new NotImplementedException();
-                return string.Empty;
+                ServerProgram.HttpRequestContext.Response.StatusCode = 404;
+                string errorString = System.IO.File.ReadAllText(@"C:\WebServerRoot\Error404.html");
+
+                return errorString;
             }
 
             

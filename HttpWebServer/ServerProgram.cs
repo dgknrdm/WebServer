@@ -18,6 +18,8 @@ namespace HttpWebServer
         static HttpListener listener;        
         static string baseUrl = WebConfigurationManager.AppSettings["serverBaseUrlKey"];
         public static HttpListenerContext HttpRequestContext;
+        public static string strExtension = "";
+        public static string appUrl = "";
 
         public ServerProgram()
         {
@@ -41,6 +43,7 @@ namespace HttpWebServer
             AppLifecycleManager.RegisterApp<IAppBase, AppFibonacci>("AppFibonacci");
             AppLifecycleManager.RegisterApp<IAppBase, AppTextFileReader>("AppTextFileReader");
             AppLifecycleManager.RegisterApp<IAppBase, AppIndex>("AppIndex");
+            AppLifecycleManager.RegisterApp<IAppBase, AppNotFound>("AppNotFound");
 
             IAppBase appfin = AppLifecycleManager.Resolve<IAppBase>("AppFibonacci");
             appfin.Start();
@@ -51,10 +54,15 @@ namespace HttpWebServer
             IAppBase appindex = AppLifecycleManager.Resolve<IAppBase>("AppIndex");
             //appindex.Start();
 
+            IAppBase apperror = AppLifecycleManager.Resolve<IAppBase>("AppNotFound");
+            apperror.Start();
+            
             while (true)
             {
                 ProcessRequest();
             }
+
+            
         }
 
         static void ProcessRequest()
@@ -64,7 +72,8 @@ namespace HttpWebServer
             result.AsyncWaitHandle.WaitOne();
             startNew.Stop();
         }
-
+       
+       
         static void ListenerCallback(IAsyncResult result)
         {
             HttpRequestContext = listener.EndGetContext(result);
@@ -75,7 +84,7 @@ namespace HttpWebServer
 
             string url = HttpRequestContext.Request.Url.ToString();
 
-            string appUrl = url.Replace(baseUrl, string.Empty);
+            appUrl = url.Replace(baseUrl, string.Empty);
 
             IAppBase theApp = RequestFilter.DoMapping(appUrl);
 
@@ -87,6 +96,7 @@ namespace HttpWebServer
             urlParamStr = new string[1];
 
             urlParamStr[0] = appUrl;
+
 
             string appResponseStr = theApp.HandleRequest(urlParamStr);
 
@@ -105,6 +115,25 @@ namespace HttpWebServer
             return;
         }
 
+      
+    }
+
+    public static class StringExtensions
+    {
+        public static string After(this string value, string a)
+        {
+            int posA = value.LastIndexOf(a);
+            if (posA == -1)
+            {
+                return "";
+            }
+            int adjustedPosA = posA + a.Length;
+            if (adjustedPosA >= value.Length)
+            {
+                return "";
+            }
+            return value.Substring(adjustedPosA);
+        }
 
     }
 }

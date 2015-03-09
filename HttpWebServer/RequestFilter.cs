@@ -18,9 +18,13 @@ namespace HttpWebServer
             {
                 return AppLifecycleManager.Resolve<IAppBase>("AppIndex");
             }
-            else
+            else if (StringExtensions.After(url,".") == "txt")
             {
                 return AppLifecycleManager.Resolve<IAppBase>("AppTextFileReader");
+            }
+            else
+            {
+                return AppLifecycleManager.Resolve<IAppBase>("AppNotFound");
             }
         }
     }
